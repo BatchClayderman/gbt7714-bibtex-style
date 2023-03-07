@@ -75,7 +75,7 @@ FUNCTION {load.config}
   #1 'show.mark :=
   #0 'space.before.mark :=
   #1 'show.medium.type :=
-  "slash" 'component.part.label :=
+  "none" 'component.part.label :=
   #0 'short.journal :=
   #0 'italic.journal :=
   #0 'bold.journal.volume :=
@@ -104,6 +104,8 @@ ENTRY
     eprint
     eprinttype
     entrysubtype
+    eventdate
+    eventtitle
     howpublished
     institution
     journal
@@ -127,6 +129,7 @@ ENTRY
     translator
     url
     urldate
+    venue
     volume
     year
   }
@@ -2032,9 +2035,77 @@ FUNCTION {dataset}
 
 FUNCTION {inbook} { book }
 
+FUNCTION {format.conference}
+{ ""
+  eventtitle empty$ not
+    { eventtitle * }
+    { booktitle * }
+  if$
+  venue empty$ not
+    { duplicate$ empty$ not
+        { ", " * }
+        'skip$
+      if$
+      venue *
+    }
+    { address empty$ not
+        { duplicate$ empty$ not
+            { ", " * }
+            'skip$
+          if$
+          address *
+        }
+        'skip$
+      if$
+    }
+  if$
+  eventdate empty$ not
+    { duplicate$ empty$ not
+        { ", " * }
+        'skip$
+      if$
+      eventdate *
+    }
+    { year empty$ not
+        { duplicate$ empty$ not
+            { ", " * }
+            'skip$
+          if$
+          year *
+        }
+        'skip$
+      if$
+    }
+  if$
+}
+
 FUNCTION {inproceedings}
-{ "C" set.entry.mark
-  incollection
+{ output.bibitem
+  output.translation
+  format.authors output
+  author format.key output
+  year.after.author
+    { period.after.author
+        'new.sentence
+        'skip$
+      if$
+      format.year "year" output.check
+    }
+    'skip$
+  if$
+  new.block
+  format.title "title" output.check
+  "C" set.entry.mark
+  format.mark "" output.after
+  new.block
+  format.conference output
+  format.extracted.pages bbl.pages.colon output.after
+  format.urldate "" output.after
+  output.url
+  output.doi
+  new.block
+  format.note output
+  fin.entry
 }
 
 FUNCTION {conference} { inproceedings }

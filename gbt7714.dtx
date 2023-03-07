@@ -1068,7 +1068,7 @@ FUNCTION {load.config}
 % 使用“//”表示析出文献
 %    \begin{macrocode}
 %<*!(in-collection|no-slash)>
-  "slash" 'component.part.label :=
+  "none" 'component.part.label :=
 %</!(in-collection|no-slash)>
 %<*in-collection>
   "in" 'component.part.label :=
@@ -1242,6 +1242,8 @@ ENTRY
     eprint
     eprinttype
     entrysubtype
+    eventdate
+    eventtitle
     howpublished
     institution
     journal
@@ -1265,6 +1267,7 @@ ENTRY
     translator
     url
     urldate
+    venue
     volume
     year
   }
@@ -3840,9 +3843,77 @@ FUNCTION {inbook} { book }
 %       Optional: editor, volume or number, series, pages, address, month,
 %                       organization, publisher, note
 %    \begin{macrocode}
+FUNCTION {format.conference}
+{ ""
+  eventtitle empty$ not
+    { eventtitle * }
+    { booktitle * }
+  if$
+  venue empty$ not
+    { duplicate$ empty$ not
+        { ", " * }
+        'skip$
+      if$
+      venue *
+    }
+    { address empty$ not
+        { duplicate$ empty$ not
+            { ", " * }
+            'skip$
+          if$
+          address *
+        }
+        'skip$
+      if$
+    }
+  if$
+  eventdate empty$ not
+    { duplicate$ empty$ not
+        { ", " * }
+        'skip$
+      if$
+      eventdate *
+    }
+    { year empty$ not
+        { duplicate$ empty$ not
+            { ", " * }
+            'skip$
+          if$
+          year *
+        }
+        'skip$
+      if$
+    }
+  if$
+}
+
 FUNCTION {inproceedings}
-{ "C" set.entry.mark
-  incollection
+{ output.bibitem
+  output.translation
+  format.authors output
+  author format.key output
+  year.after.author
+    { period.after.author
+        'new.sentence
+        'skip$
+      if$
+      format.year "year" output.check
+    }
+    'skip$
+  if$
+  new.block
+  format.title "title" output.check
+  "C" set.entry.mark
+  format.mark "" output.after
+  new.block
+  format.conference output
+  format.extracted.pages bbl.pages.colon output.after
+  format.urldate "" output.after
+  output.url
+  output.doi
+  new.block
+  format.note output
+  fin.entry
 }
 
 %    \end{macrocode}
