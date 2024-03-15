@@ -1254,6 +1254,7 @@ ENTRY
     eprint
     eprinttype
     entrysubtype
+    eventtitle
     howpublished
     institution
     journal
@@ -1277,6 +1278,7 @@ ENTRY
     translator
     url
     urldate
+    venue
     volume
     year
   }
@@ -3867,8 +3869,55 @@ FUNCTION {inbook} {
 %                       organization, publisher, note
 %    \begin{macrocode}
 FUNCTION {inproceedings}
-{ "C" set.entry.mark
-  incollection
+{ output.bibitem
+  output.translation
+  format.authors output
+  author format.key output
+  year.after.author
+    { period.after.author
+        'new.sentence
+        'skip$
+      if$
+      format.year "year" output.check
+    }
+    'skip$
+  if$
+  new.block
+  format.title "title" output.check
+  "C" set.entry.mark
+  format.mark "" output.after
+  new.block
+  format.translators output
+  new.slash
+  format.editors output
+  new.block
+  booktitle empty$
+    { eventtitle empty$
+        'skip$
+        { address output }
+      if$
+    }
+    { format.series.vol.num.booktitle "booktitle" output.check }
+  if$
+  venue empty$
+    { address empty$
+        'skip$
+        { address output }
+      if$
+    }
+    { venue output }
+  if$
+  year.after.author not
+    { format.year "year" output.check }
+    'skip$
+  if$
+  format.extracted.pages bbl.pages.colon output.after
+  format.urldate "" output.after
+  output.url
+  output.doi
+  new.block
+  format.note output
+  fin.entry
 }
 
 %    \end{macrocode}
