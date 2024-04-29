@@ -1,4 +1,4 @@
-\begin{thebibliography}{128}
+\begin{thebibliography}{129}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{#1}
 \expandafter\ifx\csname urlstyle\endcsname\relax\else
@@ -679,6 +679,12 @@ FRESE K~S, KATUS H~A, MEDER B. 2013.
   personalized medicine\allowbreak[J/OL].
 \newblock Biology, 2\allowbreak (1): 378-398\allowbreak[2013-03-19].
 \newblock \url{http://www.mdpi.com/2079-7737/2/1/378}.
+
+\bibitem[{Hagedorn}(1970)]{1970A&A.....5..184H}
+\MakeUppercase{{Hagedorn}} R. 1970.
+\newblock {Thermodynamics of Strong Interactions at High Energy and its
+  Consequences for Astrophysics}\allowbreak[J].
+\newblock Astronomy and Astrophysics, 5: 184.
 
 \bibitem[Hopkinson(2009)]{4.6.2:5}
 HOPKINSON A. 2009.
